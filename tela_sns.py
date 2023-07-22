@@ -1,9 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-import boto3
-
-client = boto3.client('sns')
 
 root = Tk()
 
@@ -11,81 +8,7 @@ class Funcs():
     def limpar_tela(self):
         self.endpoint_entry.delete(0, END)
         self.protocolo_entry.delete(0, END)
-        self.topico_entry.delete(0,END)
-
-    def limpar_campos(self):
-        self.endpoint_entry.delete(0, END)
-        self.protocolo_entry.delete(0, END)
-
-    def adicionar_usuario(self):
-        topico = self.topico_entry.get()
-        endpoint = self.endpoint_entry.get()
-        protocolo = self.protocolo_entry.get()
-
-        if topico == "" or endpoint == "":
-            msg = "Para incluir um novo email é necessario \n"
-            msg += "ter todos os campos preenchidos"
-
-            messagebox.showinfo("AVISO DE CAMPO VAZIO", msg)
-
-        else:
-            res = client.subscribe(
-                TopicArn=topico,
-                Protocol=protocolo,
-                Endpoint=endpoint,
-
-                ReturnSubscriptionArn=True
-            )
-
-            if res['ResponseMetadata']['HTTPStatusCode'] == 200:
-                msg = "O email ", endpoint, " foi cadastrado com sucesso"
-                messagebox.showinfo("Aviso", msg)
-
-            else:
-                msg= "Erro no cadastro do email ", endpoint
-                messagebox.showinfo("AVISO", msg)
-
-            self.limpar_campos()
-
-    def select_lista(self, lista):
-        self.listaCli.delete(*self.listaCli.get_children())
-
-        for i in lista:
-            self.listaCli.insert("", END, values=i)
-
-    def buscar_topicos(self):
-        print("qq")
-        lista_topicos = client.list_topics()
-        list_arn = []
-        print(lista_topicos)
-        for i in lista_topicos['Topics']:
-            list_arn.append(i['TopicArn'])
-
-        self.select_lista(list_arn)
-
-    def buscar_endpoints(self):
-        topico = self.topico_entry.get()
-        if topico == "":
-            msg = "Para fazer a busca de emails é necessario \n"
-            msg += "ter o topico selecionado"
-
-            messagebox.showinfo("AVISO", msg)
-
-        else:
-            topico = self.topico_entry.get()
-            protocol = ""
-            endpoints = []
-            response = client.list_subscriptions_by_topic(
-                TopicArn=topico
-            )
-            print(response)
-            for i in response['Subscriptions']:
-                endpoints.append(i['Endpoint'])
-                protocol = i['Protocol']
-
-            self.protocolo_entry.delete(0, END)
-            self.protocolo_entry.insert(END, protocol)
-            self.select_lista(endpoints)
+        self.topico_entry.delete(0, END)
 
     def OnDoubleClick(self, event):
         self.listaCli.selection()
@@ -99,46 +22,6 @@ class Funcs():
             for n in self.listaCli.selection():
                 col1 = self.listaCli.item(n, 'values')
                 self.endpoint_entry.insert(END, col1)
-
-    def excluir_usuario(self):
-        topico_arn = str(self.topico_entry.get())
-        endpoint = self.endpoint_entry.get()
-        protocolo = self.protocolo_entry.get()
-
-        if topico_arn == "" or endpoint == "" or protocolo == "":
-            msg = "Para excluir um mail é necessario \n"
-            msg += "ter todos os campos preenchidos"
-
-            messagebox.showinfo("AVISO", msg)
-        else:
-            ok_cancel = messagebox.askokcancel("Tem certeza?")
-
-            if ok_cancel:
-                response = client.list_subscriptions_by_topic(
-                    TopicArn=topico_arn
-                )
-                print(response)
-                for i in response['Subscriptions']:
-                    if i['Endpoint'] == endpoint:
-                        subscription_arn = i['SubscriptionArn']
-
-                response = client.unsubscribe(
-                    SubscriptionArn=subscription_arn
-                )
-
-                if response['ResponseMetadata']['HTTPStatusCode'] == 200:
-                    msg = "O email ", endpoint, " foi excluido com sucesso"
-                    messagebox.showinfo("AVISO", msg)
-
-                else:
-                    msg = "Erro na exclusao do email ", endpoint
-                    messagebox.showerror("AVISO", msg)
-
-                self.limpar_campos()
-
-            else:
-                self.limpar_campos()
-
 
 class Application(Funcs):
     def __init__(self):
@@ -170,19 +53,19 @@ class Application(Funcs):
         self.bt_limpar.place(relx=0.05, rely=0.75, relwidth=0.1, relheight=0.12)
 
         self.bt_buscar = Button(self.frames_1, text="Buscar Topico", bd=2,bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
-                                command=self.buscar_topicos)
+                                )#command=self.buscar_topicos)
         self.bt_buscar.place(relx=0.16, rely=0.75, relwidth=0.18, relheight=0.12)
 
         self.bt_buscar = Button(self.frames_1, text="Buscar email",bd=2, bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
-                                command=self.buscar_endpoints)
+                                )#command=self.buscar_endpoints)
         self.bt_buscar.place(relx=0.35, rely=0.75, relwidth=0.18, relheight=0.12)
 
         self.bt_novo = Button(self.frames_1, text="Adicionar", bd=2,bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
-                                command=self.adicionar_usuario)
+                                )#command=self.adicionar_usuario)
         self.bt_novo.place(relx=0.60, rely=0.75, relwidth=0.13, relheight=0.12)
 
         self.bt_apagar = Button(self.frames_1, text="Excluir", bd=2,bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
-                                command=self.excluir_usuario)
+                                )#command=self.excluir_usuario)
         self.bt_apagar.place(relx=0.74, rely=0.75, relwidth=0.12, relheight=0.12)
 
 
@@ -205,15 +88,12 @@ class Application(Funcs):
         self.protocolo_entry.place(relx=0.55, rely=0.45, relwidth=0.18, relheight=0.07)
 
     def lista_frame2(self):
-        self.listaCli = ttk.Treeview(self.frames_2, height=3, columns=("col1", "col2"))
+        self.listaCli = ttk.Treeview(self.frames_2, height=3, columns=("col1"))
         self.listaCli.heading("#0", text="")
         self.listaCli.heading("#1", text="Clique 2 vezes")
-        self.listaCli.heading("#2", text="Status")
-
 
         self.listaCli.column("#0", width=1)
-        self.listaCli.column("#1", width=510)
-        self.listaCli.column("#2", width=20)
+        self.listaCli.column("#1", width=590)
 
         self.listaCli.place(relx=0.01, rely=0.1, relwidth=0.95, relheight=0.85)
         #
@@ -224,6 +104,3 @@ class Application(Funcs):
 
 
 Application()
-
-
-
