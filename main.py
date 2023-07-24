@@ -157,6 +157,7 @@ class Application(Funcs):
         self.root.resizable(True, True)
         self.root.maxsize(width=900, height=700)
         self.minsize = self.root.minsize(width=500, height=500)
+
     def frames_da_tela(self):
         self.frames_1 = Frame(self.root, border=4, bg="#DCDCDC",highlightbackground="#808080",highlightthickness=3)
         self.frames_1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.46)
@@ -169,19 +170,19 @@ class Application(Funcs):
                                 command=self.limpar_tela)
         self.bt_limpar.place(relx=0.05, rely=0.75, relwidth=0.1, relheight=0.12)
 
-        self.bt_buscar = Button(self.frames_1, text="Buscar Topico", bd=2,bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
+        self.bt_buscar = Button(self.frames_1, text="Buscar Topico", bd=2,bg="#107db2", fg="#FFFAFA", font=("verdana", 8, "bold"),
                                 command=self.buscar_topicos)
         self.bt_buscar.place(relx=0.16, rely=0.75, relwidth=0.18, relheight=0.12)
 
-        self.bt_buscar = Button(self.frames_1, text="Buscar email",bd=2, bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
+        self.bt_buscar = Button(self.frames_1, text="Buscar email",bd=2, bg="#107db2", fg="#FFFAFA", font=("verdana", 8, "bold"),
                                 command=self.buscar_endpoints)
         self.bt_buscar.place(relx=0.35, rely=0.75, relwidth=0.18, relheight=0.12)
 
-        self.bt_novo = Button(self.frames_1, text="Adicionar", bd=2,bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
+        self.bt_novo = Button(self.frames_1, text="Adicionar", bd=2,bg="#3CB371", fg="#FFFAFA", font=("verdana", 8, "bold"),
                                 command=self.adicionar_usuario)
         self.bt_novo.place(relx=0.60, rely=0.75, relwidth=0.13, relheight=0.12)
 
-        self.bt_apagar = Button(self.frames_1, text="Excluir", bd=2,bg="#FFFAFA", fg="#107db2", font=("verdana", 8, "bold"),
+        self.bt_apagar = Button(self.frames_1, text="Excluir", bd=2,bg="#FF6347", fg="#FFFAFA", font=("verdana", 8, "bold"),
                                 command=self.excluir_usuario)
         self.bt_apagar.place(relx=0.74, rely=0.75, relwidth=0.12, relheight=0.12)
 
